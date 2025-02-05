@@ -105,7 +105,7 @@ struct Operand {
     bool typeassign;        //是否都是寄存器，有强制指定为MRG
 
     Operand() : type(NNN), reg(-1), base(-1), index(-1), scale(1), disp(0),
-        bits(0), segment(""), typeassign(false) {}
+        bits(0), segment(""), typeassign(false){}
 };
 
 // 汇编器类定义
@@ -116,7 +116,7 @@ public:
     ~Assembler() = default;
 
     // 主要功能函数
-    std::vector<unsigned char> AssembleInstruction(const std::string& instruction, int currentTotalLength, int def_num_base = 0);  // 汇编单条指令
+    std::vector<unsigned char> AssembleInstruction(const std::string& instruction, int currentTotalLength, int def_num_base = 0, unsigned int jmpstart = 0);  // 汇编单条指令
     std::string BytesToHexString(const std::vector<unsigned char>& bytes);  // 将字节序列转换为十六进制字符串
     std::string BytesToByteSet(const std::vector<unsigned char>& bytes);    // 将字节序列转换为字节集格式
     std::vector<unsigned char> HexStringToBytes(const std::string& hex);    // 将十六进制字符串转换为字节序列
@@ -143,7 +143,7 @@ private:
 
     // 生成机器码的辅助函数
     std::vector<unsigned char> generateMachineCode(const t_cmddata& cmd,
-        const std::vector<Operand>& parsedOperands, int currentTotalLength);
+        const std::vector<Operand>& parsedOperands, int currentTotalLength, unsigned int jmpstart);
 
     // 内部数据成员
     std::map<std::string, int> labels;          // 标签表（地址映射）

@@ -1,0 +1,20 @@
+﻿“AiAsmToHex-new.exe”(Win32): 已加载“D:\VC\repos\AiAsmToHex-new\Debug\AiAsmToHex-new.exe”。已加载符号。
+“AiAsmToHex-new.exe”(Win32): 已加载“C:\Windows\SysWOW64\ntdll.dll”。
+“AiAsmToHex-new.exe”(Win32): 已加载“C:\Windows\SysWOW64\kernel32.dll”。
+“AiAsmToHex-new.exe”(Win32): 已加载“C:\Windows\SysWOW64\KernelBase.dll”。
+“AiAsmToHex-new.exe”(Win32): 已加载“C:\Windows\SysWOW64\msvcp140d.dll”。
+“AiAsmToHex-new.exe”(Win32): 已加载“C:\Windows\SysWOW64\vcruntime140d.dll”。
+“AiAsmToHex-new.exe”(Win32): 已加载“C:\Windows\SysWOW64\ucrtbased.dll”。
+线程 0x425c 已退出，返回值为 0 (0x0)。
+“AiAsmToHex-new.exe”(Win32): 已加载“C:\Windows\SysWOW64\kernel.appcore.dll”。
+“AiAsmToHex-new.exe”(Win32): 已加载“C:\Windows\SysWOW64\msvcrt.dll”。
+“AiAsmToHex-new.exe”(Win32): 已加载“C:\Windows\SysWOW64\rpcrt4.dll”。
+“AiAsmToHex-new.exe”(Win32): 已加载“C:\Windows\SysWOW64\sspicli.dll”。
+“AiAsmToHex-new.exe”(Win32): 已加载“C:\Windows\SysWOW64\cryptbase.dll”。
+“AiAsmToHex-new.exe”(Win32): 已加载“C:\Windows\SysWOW64\bcryptprimitives.dll”。
+“AiAsmToHex-new.exe”(Win32): 已加载“C:\Windows\SysWOW64\sechost.dll”。
+“AiAsmToHex-new.exe”(Win32): 已加载“C:\Windows\SysWOW64\bcrypt.dll”。
+线程 0x3408 已退出，返回值为 0 (0x0)。
+线程 0x3dbc 已退出，返回值为 0 (0x0)。
+线程 0x3558 已退出，返回值为 0 (0x0)。
+程序“[6636] AiAsmToHex-new.exe”已退出，返回值为 0 (0x0)。

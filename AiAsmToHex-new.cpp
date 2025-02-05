@@ -20,7 +20,7 @@ const t_cmddata cmddata[] = {
 		// CMP指令(1000+)																			
 		// RAC 专用模板																			
 		{ 0x0000FF,0x00003C,1,BB,BB,BB,RAC,IMM,NNN,C_CMD,"CMP",1000,1,false,0,true,1,false }, // CMP RAC8,imm8
-		{ 0x0000FF,0x00003D,1,W16,W16,BB,RAC,IMM,NNN,C_CMD,"CMP",1001,1,false,0,true,2,false }, // CMP RAC16,imm16
+		{ 0x0000FF,0x00003D,1,W16,W16,BB,RAC,IMM,NNN,C_CMD,"CMP",1001,1,false,0,true,4,false }, // CMP RAC16,imm16
 		{ 0x0000FF,0x00003D,1,W32,W32,BB,RAC,IMM,NNN,C_CMD,"CMP",1002,1,false,0,true,4,false }, // CMP RAC32,imm32
 		// 通用模板																			
 		{ 0x0000FE,0x000038,1,BB,BB,BB,REG,MRG,NNN,C_CMD,"CMP",1003,1,true,0,false,0,false }, // CMP r8,m8
@@ -39,7 +39,7 @@ const t_cmddata cmddata[] = {
 		// MOV指令 (1100+)																			
 		// RAC 专用模板																			
 		{ 0x0000FF,0x0000B0,1,BB,BB,BB,RAC,IMM,NNN,C_CMD,"MOV",1100,1,false,0,true,1,false }, // MOV RAC8,imm8
-		{ 0x0000FF,0x0000B8,1,W16,W16,BB,RAC,IMM,NNN,C_CMD,"MOV",1101,1,false,0,true,2,false }, // MOV RAC16,imm16
+		{ 0x0000FF,0x0000B8,1,W16,W16,BB,RAC,IMM,NNN,C_CMD,"MOV",1101,1,false,0,true,4,false }, // MOV RAC16,imm16
 		{ 0x0000FF,0x0000B8,1,W32,W32,BB,RAC,IMM,NNN,C_CMD,"MOV",1102,1,false,0,true,4,false }, // MOV RAC32,imm32
 		// 通用模板																			
 		{ 0x0000FE,0x00008A,1,BB,BB,BB,REG,MRG,NNN,C_CMD,"MOV",1103,1,true,0,false,0,false }, // MOV r8,m8
@@ -47,8 +47,8 @@ const t_cmddata cmddata[] = {
 		{ 0x0000FE,0x000088,1,BB,BB,BB,MRG,REG,NNN,C_CMD,"MOV",1105,1,true,0,false,0,false }, // MOV m8,r8
 		{ 0x0000FF,0x0000C6,1,BB,BB,BB,MRG,IMM,NNN,C_CMD,"MOV",1106,1,true,0,true,1,false }, // MOV m8,imm8
 
-		{ 0x0000FF,0x0000C7,1,WW,BB,BB,REG,IMM,NNN,C_CMD,"MOV",1107,1,true,0,true,1,false }, // MOV r32,imm8
-		{ 0x0000FF,0x0000C7,1,WW,BB,BB,MRG,IMM,NNN,C_CMD,"MOV",1108,1,true,0,true,1,false }, // MOV m32,imm8
+		{ 0x0000FF,0x0000B8,1,WW,BB,BB,REG,IMM,NNN,C_CMD,"MOV",1107,1,false,0,true,4,false }, // MOV r32, imm32
+		{ 0x0000FF,0x0000C7,1,WW,BB,BB,MRG,IMM,NNN,C_CMD,"MOV",1108,1,true,0,true,4,false }, // MOV m32,imm8
 
 		{ 0x0000FE,0x00008B,1,WW,WW,BB,REG,MRG,NNN,C_CMD,"MOV",1109,1,true,0,false,0,false }, // MOV r16,m16
 		{ 0x0000FF,0x0000C7,1,WW,WW,BB,REG,IMM,NNN,C_CMD,"MOV",1110,1,true,0,true,0,false }, // MOV r16,imm16
@@ -58,7 +58,7 @@ const t_cmddata cmddata[] = {
 		// XOR指令 (1200+)																			
 		// RAC 专用模板																			
 		{ 0x0000FF,0x000034,1,BB,BB,BB,RAC,IMM,NNN,C_CMD,"XOR",1200,1,false,0,true,1,false }, // XOR RAC8,imm8
-		{ 0x0000FF,0x000035,1,W16,W16,BB,RAC,IMM,NNN,C_CMD,"XOR",1201,1,false,0,true,2,false }, // XOR RAC16,imm16
+		{ 0x0000FF,0x000035,1,W16,W16,BB,RAC,IMM,NNN,C_CMD,"XOR",1201,1,false,0,true,4,false }, // XOR RAC16,imm16
 		{ 0x0000FF,0x000035,1,W32,W32,BB,RAC,IMM,NNN,C_CMD,"XOR",1202,1,false,0,true,4,false }, // XOR RAC32,imm32
 		// 通用模板																			
 		{ 0x0000FE,0x000032,1,BB,BB,BB,REG,MRG,NNN,C_CMD,"XOR",1203,1,true,0,false,0,false }, // XOR r8,m8
@@ -79,7 +79,7 @@ const t_cmddata cmddata[] = {
 		// ADD指令 (1300+)																			
 		// RAC 专用模板																			
 		{ 0x0000FF,0x000004,1,BB,BB,BB,RAC,IMM,NNN,C_CMD,"ADD",1300,1,false,0,true,1,false }, // ADD RAC8,imm8
-		{ 0x0000FF,0x000005,1,W16,W16,BB,RAC,IMM,NNN,C_CMD,"ADD",1301,1,false,0,true,2,false }, // ADD RAC16,imm16
+		{ 0x0000FF,0x000005,1,W16,W16,BB,RAC,IMM,NNN,C_CMD,"ADD",1301,1,false,0,true,4,false }, // ADD RAC16,imm16
 		{ 0x0000FF,0x000005,1,W32,W32,BB,RAC,IMM,NNN,C_CMD,"ADD",1302,1,false,0,true,4,false }, // ADD RAC32,imm32
 		// 通用模板																			
 		{ 0x0000FE,0x000002,1,BB,BB,BB,REG,MRG,NNN,C_CMD,"ADD",1303,1,true,0,false,0,false }, // ADD r8,m8
@@ -99,7 +99,7 @@ const t_cmddata cmddata[] = {
 		// OR指令 (1400+)																			
 		// RAC 专用模板																			
 		{ 0x0000FF,0x00000C,1,BB,BB,BB,RAC,IMM,NNN,C_CMD,"OR",1400,1,false,0,true,1,false }, // OR RAC8,imm8
-		{ 0x0000FF,0x00000D,1,W16,W16,BB,RAC,IMM,NNN,C_CMD,"OR",1401,1,false,0,true,2,false }, // OR RAC16,imm16
+		{ 0x0000FF,0x00000D,1,W16,W16,BB,RAC,IMM,NNN,C_CMD,"OR",1401,1,false,0,true,4,false }, // OR RAC16,imm16
 		{ 0x0000FF,0x00000D,1,W32,W32,BB,RAC,IMM,NNN,C_CMD,"OR",1402,1,false,0,true,4,false }, // OR RAC32,imm32
 		// 通用模板																			
 		{ 0x0000FE,0x00000A,1,BB,BB,BB,REG,MRG,NNN,C_CMD,"OR",1403,1,true,0,false,0,false }, // OR r8,m8
@@ -118,7 +118,7 @@ const t_cmddata cmddata[] = {
 		// AND指令 (1500+)																			
 		// RAC 专用模板																			
 		{ 0x0000FF,0x000024,1,BB,BB,BB,RAC,IMM,NNN,C_CMD,"AND",1500,1,false,0,true,1,false }, // AND RAC8,imm8
-		{ 0x0000FF,0x000025,1,W16,W16,BB,RAC,IMM,NNN,C_CMD,"AND",1501,1,false,0,true,2,false }, // AND RAC16,imm16
+		{ 0x0000FF,0x000025,1,W16,W16,BB,RAC,IMM,NNN,C_CMD,"AND",1501,1,false,0,true,4,false }, // AND RAC16,imm16
 		{ 0x0000FF,0x000025,1,W32,W32,BB,RAC,IMM,NNN,C_CMD,"AND",1502,1,false,0,true,4,false }, // AND RAC32,imm32
 		// 通用模板																			
 		{ 0x0000FE,0x000022,1,BB,BB,BB,REG,MRG,NNN,C_CMD,"AND",1503,1,true,0,false,0,false }, // AND r8,m8
@@ -138,7 +138,7 @@ const t_cmddata cmddata[] = {
 		// SUB指令 (1600+)																			
 		// RAC 专用模板																			
 		{ 0x0000FF,0x00002C,1,BB,BB,BB,RAC,IMM,NNN,C_CMD,"SUB",1600,1,false,0,true,1,false }, // SUB RAC8,imm8
-		{ 0x0000FF,0x00002D,1,W16,W16,BB,RAC,IMM,NNN,C_CMD,"SUB",1601,1,false,0,true,2,false }, // SUB RAC16,imm16
+		{ 0x0000FF,0x00002D,1,W16,W16,BB,RAC,IMM,NNN,C_CMD,"SUB",1601,1,false,0,true,4,false }, // SUB RAC16,imm16
 		{ 0x0000FF,0x00002D,1,W32,W32,BB,RAC,IMM,NNN,C_CMD,"SUB",1602,1,false,0,true,4,false }, // SUB RAC32,imm32
 		// 通用模板																			
 		{ 0x0000FE,0x00002A,1,BB,BB,BB,REG,MRG,NNN,C_CMD,"SUB",1603,1,true,0,false,0,false }, // SUB r8,m8
@@ -157,7 +157,7 @@ const t_cmddata cmddata[] = {
 		//TEST指令(1700+)																			
 		// RAC 专用模板																			
 		{ 0x0000FF,0x0000A8,1,BB,BB,BB,RAC,IMM,NNN,C_CMD,"TEST",1700,1,false,0,true,1,false }, // TEST RAC8,imm8
-		{ 0x0000FF,0x0000A9,1,W16,W16,BB,RAC,IMM,NNN,C_CMD,"TEST",1701,1,false,0,true,2,false }, // TEST RAC16,imm16
+		{ 0x0000FF,0x0000A9,1,W16,W16,BB,RAC,IMM,NNN,C_CMD,"TEST",1701,1,false,0,true,4,false }, // TEST RAC16,imm16
 		{ 0x0000FF,0x0000A9,1,W32,W32,BB,RAC,IMM,NNN,C_CMD,"TEST",1702,1,false,0,true,4,false }, // TEST RAC32,imm32
 		// 通用模板																			
 		{ 0x0000FE,0x000084,1,BB,BB,BB,REG,MRG,NNN,C_CMD,"TEST",1703,1,true,0,false,0,false }, // TEST r8,m8
@@ -288,7 +288,7 @@ const t_cmddata cmddata[] = {
 
 		// RETN指令(3000+)
 		{ 0x0000FF, 0x0000C2, 1, BB,BB,BB, IMM,NNN,NNN, C_CMD,"RETN",3000, 1, false, 0, true, 2, false }, // RETN imm16
-		{ 0x0000FF, 0x0000C2, 1, WW,BB,BB, IMM,NNN,NNN, C_CMD,"RETN",3001, 1, false, 0, true, 2, false }, // RETN imm16
+		{ 0x0000FF, 0x0000C2, 1, WW,BB,BB, IMM,NNN,NNN, C_CMD,"RETN",3001, 1, false, 0, true, 4, false }, // RETN imm32
 		{ 0x0000FF, 0x0000C3, 1, BB,BB,BB, NNN,NNN,NNN, C_CMD,"RETN",3002, 1, false, 0, false, 0, false }, // RETN
 
 
@@ -1099,6 +1099,7 @@ std::string Assembler::DebugTypeToStr(int type) {
 	}
 }
 
+//判断模版汇编指令名称和某字符串是否相同
 bool Assembler::isCmdnameMatch(const char* cmdName, const std::string& opcode) {
 	if (!cmdName) {
 		return false;
@@ -1119,7 +1120,8 @@ bool Assembler::isCmdnameMatch(const char* cmdName, const std::string& opcode) {
 	return isStartValid && isEndValid;
 }
 
-std::vector<unsigned char> Assembler::AssembleInstruction(const std::string& instruction, int currentTotalLength, int def_num_base) {
+//instruction:汇编语句;currentTotalLength:累计指令长度;def_num_base:立即数默认进制-0为16进制,1为10进制其他为16进制;jmpstart:跳转立即数的起始基址
+std::vector<unsigned char> Assembler::AssembleInstruction(const std::string& instruction, int currentTotalLength, int def_num_base, unsigned int jmpstart) {
 	std::vector<unsigned char> machineCode;
 	std::string upperInst = toUpper(instruction);
 	bool foundMatch = false;
@@ -1452,7 +1454,12 @@ std::vector<unsigned char> Assembler::AssembleInstruction(const std::string& ins
 				parsedOperands[1].type = 2;
 				parsedOperands[1].typeassign = true;
 			}
-			else if (opcode == "MOV" && parsedOperands[0].bits == BB) {
+			//MOV AL,DL;MOV EDX,ECX
+			else if (opcode == "MOV") {
+				parsedOperands[1].type = 2;
+				parsedOperands[1].typeassign = true;
+			}
+			else if (opcode == "SUB") {
 				parsedOperands[1].type = 2;
 				parsedOperands[1].typeassign = true;
 			}
@@ -1517,7 +1524,7 @@ std::vector<unsigned char> Assembler::AssembleInstruction(const std::string& ins
 				<< "模版编号=" << std::dec << cmd.template_id
 				//<< " 指令名称=" << cmd.name
 				//<< " 指令掩码=" << std::hex << cmd.mask
-				//<< " 基本操作码=" << std::hex << cmd.code
+				<< " 基本操作码=" << std::hex << cmd.code
 				//<< " 指令类型=" << std::dec << cmd.type
 				//<< " 指令长度=" << std::dec << static_cast<int>(cmd.len)
 				<< " 寄存器1=" << DebugTypeToStr(static_cast<int>(cmd.arg1))
@@ -1632,7 +1639,7 @@ std::vector<unsigned char> Assembler::AssembleInstruction(const std::string& ins
 	}
 
 	if (bestMatch) {
-		return generateMachineCode(*bestMatch, parsedOperands, currentTotalLength);
+		return generateMachineCode(*bestMatch, parsedOperands, currentTotalLength, jmpstart);
 	}
 
 	if (is_debug) {
@@ -1659,8 +1666,8 @@ int Assembler::checkBitRange(int num) {
 	}
 }
 
-// New function: helper function to generate machine code
-std::vector<unsigned char> Assembler::generateMachineCode(const t_cmddata& cmd, const std::vector<Operand>& parsedOperands, int currentTotalLength) {
+// 生成机器码
+std::vector<unsigned char> Assembler::generateMachineCode(const t_cmddata& cmd, const std::vector<Operand>& parsedOperands, int currentTotalLength, unsigned int jmpstart) {
 	std::vector<unsigned char> machineCode;
 	if (is_debug) {
 		std::cout << "[DEBUG] 开始生成机器码..." << std::endl;
@@ -1670,6 +1677,11 @@ std::vector<unsigned char> Assembler::generateMachineCode(const t_cmddata& cmd, 
 	if (!parsedOperands.empty()) {
 		// 对于16位操作数，添加操作数大小前缀
 		if (parsedOperands[0].bits == W16) {
+			machineCode.push_back(PREFIX_OPERAND);
+			if (is_debug) {
+				std::cout << "[DEBUG] 添加操作数大小前缀: 66H" << std::endl;
+			}
+		}else if (parsedOperands[0].type==MRG && parsedOperands[1].bits == W16) {
 			machineCode.push_back(PREFIX_OPERAND);
 			if (is_debug) {
 				std::cout << "[DEBUG] 添加操作数大小前缀: 66H" << std::endl;
@@ -1792,7 +1804,7 @@ std::vector<unsigned char> Assembler::generateMachineCode(const t_cmddata& cmd, 
 						immSize = 2;  // 16位立即数
 					}
 					else {
-						immSize = cmd.imm_bytes;  // 使用模板定义的大小
+							immSize = cmd.imm_bytes;  // 使用模板定义的大小
 					}
 				}
 				else {
@@ -1803,7 +1815,7 @@ std::vector<unsigned char> Assembler::generateMachineCode(const t_cmddata& cmd, 
 				if (cmd.type == C_JMC || cmd.type == C_CAL || cmd.type == C_LOOP) {
 					// 计算相对偏移：目标地址 - (当前地址 + 指令长度)
 					int currentInstrLength = machineCode.size() + immSize;
-					immValue = immValue - (currentTotalLength + currentInstrLength);
+					immValue = immValue - jmpstart - (currentTotalLength + currentInstrLength);
 
 					if (is_debug) {
 						std::cout << "[DEBUG] 计算跳转偏移: 目标=0x" << std::hex << parsedOperands[i].disp
@@ -2020,7 +2032,7 @@ unsigned char Assembler::generateModRMByte(const t_cmddata& cmd, const std::vect
 
 		if (reg == 0 && cmd.arg1 == MRG && cmd.arg2 == REG) {
 			// MRG,REG格式：reg字段放源寄存器
-						//本来是REG,REG,第二个REG被强制指定为MRG
+						//本来是REG,REG,第一个REG被强制指定为MRG
 			if (operands[0].typeassign) {
 				reg = operands[1].reg;
 			}
@@ -2039,7 +2051,14 @@ unsigned char Assembler::generateModRMByte(const t_cmddata& cmd, const std::vect
 		}
 		else if (reg == 0 && cmd.arg1 == REG && cmd.arg2 == MRG) {
 			if (operands[1].typeassign) {
-				reg = operands[1].reg;
+				//例如MOV AL,DL; MOV EDX,ECX
+				if (isCmdnameMatch("MOV/ADD/SUB", cmd.name)) {
+					reg = operands[0].reg;
+				}
+				else {
+					reg = operands[1].reg;
+				}
+
 			}
 			else {
 				// REG,MRG格式：reg字段放目标寄存器
@@ -2080,7 +2099,13 @@ unsigned char Assembler::generateModRMByte(const t_cmddata& cmd, const std::vect
 			else {
 				mod = 0b11;
 				if (operands[1].typeassign) {
-					rm = operands[0].reg;
+					//例如MOV AL,DL ; MOV EDX,ECX
+					if (isCmdnameMatch("MOV/ADD/SUB", cmd.name)) {
+						rm = operands[1].reg;
+					}
+					else {
+						rm = operands[0].reg;
+					}
 				}
 				else {
 					rm = rmOperand.reg;  // 直接寻址			
@@ -2116,96 +2141,13 @@ int main() {
 	bool is_debug = true;  // 控制调试输出的开关
 	Assembler assembler;
 	assembler.setDebug(is_debug);  // 设置汇编器的调试状态
+	unsigned int jmpstart = 0;  //跳转指令起始地址
 
 	// 测试用的汇编代码
 	std::string samstr = R"(
-PUSHAD
-MOV ESI,[EBP+8]
-MOV EDX,[EBP+C]
-MOV ESI,[ESI]
-MOV EDX,[EDX]
-PUSH ESI
-MOV ECX,[EBP+18]
-MOV EBX,[EBP+10]
-SHL ECX,5
-LEA EBP,[ESI+EBX]
-CLD
-OR CH,CL
-TEST EDX,EDX
-JE SHORT 0000009E
-MOV AH,[EDX]
-XOR EBX,EBX
-CMP AH,81
-CMOVB EBX,ECX
-TEST ESI,ESI
-JE SHORT 0000009E
-TEST AH,AH
-JE SHORT 0000009E
-OR AH,BL
-PUSH EBP
-MOV EBX,ECX
-JMP SHORT 00000041
-CMP AL,FF
-JE SHORT 0000004A
-CMP AL,AH
-JE SHORT 00000052
-INC ESI
-LODS BYTE PTR [ESI]
-CMP AL,80
-JA SHORT 00000038
-TEST AL,AL
-JE SHORT 0000009D
-OR AL,BL
-CMP AL,AH
-JNZ SHORT 00000041
-XOR AL,AL
-CMP [ESP],ESI
-JA SHORT 00000096
-LEA EDI,[ESI-1]
-MOV EBP,EDX
-MOV CL,[EDI]
-MOV CH,[EBP]
-INC EDI
-INC EBP
-TEST CH,CH
-JE SHORT 000000A4
-CMP CH,81
-JB SHORT 00000082
-CMP CH,FF
-JE SHORT 00000082
-CMP CH,CL
-JNZ SHORT 00000096
-MOV CL,[EDI]
-MOV CH,[EBP]
-INC EDI
-INC EBP
-CMP CH,CL
-JE SHORT 0000005C
-JMP SHORT 00000096
-CMP CH,CL
-JE SHORT 0000005C
-OR ECX,EBX
-CMP CH,CL
-JNZ SHORT 00000096
-CMP CH,61
-JB SHORT 00000096
-CMP CH,7B
-JB SHORT 0000005C
-SHL AL,1
-ADC ESI,0
-JMP SHORT 00000041
-POP EBP
-POP EBP
-OR EAX,FFFFFFFF
-JMP SHORT 000000AA
-POP EBP
-MOV EAX,ESI
-POP EBP
-SUB EAX,EBP
-MOV [ESP+1C],EAX
-POPAD
-POP EBP
-RETN 18
+ADD EDX,EAX
+SUB EDX,EAX
+
 
 )";
 
@@ -2231,10 +2173,10 @@ RETN 18
 			std::cout << "[DEBUG] 当前指令偏移: 0x" << std::hex << totalLength << std::endl;
 		}
 
-		debug_pause_str = "SHL AL,1";
+		debug_pause_str = "MOV [EAX], 2";
 		debug_pause_num = 2902;
 
-		// 解析指令并生成机器码
+		// 解析指令并生成机器码()
 		auto instrBytes = assembler.AssembleInstruction(line, totalLength, 0);
 
 		// 输出调试信息：显示生成的机器码
