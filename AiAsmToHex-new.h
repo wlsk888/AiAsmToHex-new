@@ -84,7 +84,13 @@ struct t_cmddata {
     unsigned char imm_bytes;       // 立即数的字节数
     bool reverse_operands;         // 是否需要反转操作数顺序
 };
-
+//单行汇编转换结果结构
+struct ResultInfo {
+    std::string asmstr;
+    std::string hexstr;
+    std::string Bytestr;
+    int hexlen = 0;
+};
 // 寄存器信息数据结构
 struct RegInfo {
     const char* name;        // 寄存器名称

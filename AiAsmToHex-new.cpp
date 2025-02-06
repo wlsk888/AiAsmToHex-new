@@ -1814,7 +1814,7 @@ std::vector<unsigned char> Assembler::generateMachineCode(const t_cmddata& cmd, 
 
 				if (cmd.type == C_JMC || cmd.type == C_CAL || cmd.type == C_LOOP) {
 					// 计算相对偏移：目标地址 - (当前地址 + 指令长度)
-					int currentInstrLength = machineCode.size() + immSize;
+					int currentInstrLength = static_cast<int>(machineCode.size()) + immSize;
 					immValue = immValue - jmpstart - (currentTotalLength + currentInstrLength);
 
 					if (is_debug) {
@@ -1840,16 +1840,16 @@ std::vector<unsigned char> Assembler::generateMachineCode(const t_cmddata& cmd, 
 	}
 
 
-	if (is_debug) {
-		std::cout << "[DEBUG] 机器码生成完成，总长度: "
-			<< std::dec << machineCode.size() << " 字节" << std::endl;
-		std::cout << "[DEBUG] 生成的机器码: ";
-		for (unsigned char byte : machineCode) {
-			std::cout << std::uppercase << std::hex << std::setw(2) << std::setfill('0')
-				<< static_cast<int>(byte) << " ";
-		}
-		std::cout << std::endl;
-	}
+	//if (is_debug) {
+	//	std::cout << "[DEBUG] 机器码生成完成，总长度: "
+	//		<< std::dec << machineCode.size() << " 字节" << std::endl;
+	//	std::cout << "[DEBUG] 生成的机器码: ";
+	//	for (unsigned char byte : machineCode) {
+	//		std::cout << std::uppercase << std::hex << std::setw(2) << std::setfill('0')
+	//			<< static_cast<int>(byte) << " ";
+	//	}
+	//	std::cout << std::endl;
+	//}
 
 	return machineCode;
 }
@@ -2138,16 +2138,34 @@ unsigned char Assembler::generateModRMByte(const t_cmddata& cmd, const std::vect
 
 int main() {
 	// 设置调试开关
-	bool is_debug = true;  // 控制调试输出的开关
+	bool is_debug = false;  // 控制调试输出的开关
+	bool is_debug_line = true; // 控制单行输出的开关
 	Assembler assembler;
 	assembler.setDebug(is_debug);  // 设置汇编器的调试状态
 	unsigned int jmpstart = 0;  //跳转指令起始地址
 
 	// 测试用的汇编代码
 	std::string samstr = R"(
-ADD EDX,EAX
-SUB EDX,EAX
-
+PUSH EDI
+MOV EDX,[EBP+8]
+MOV EDI,[EBP-4]
+DEC EDI
+XOR ECX,ECX
+MOV CL,8
+MOV AL,DL
+AND AL,F
+CMP AL,9
+JA SHORT 00000018
+ADD AL,30
+JMP SHORT 0000001A
+ADD AL,37
+MOV [ECX+EDI],AL
+SHR EDX,4
+JE SHORT 00000024
+LOOPD SHORT 0000000C
+LEA EAX,[ECX+EDI]
+MOV [EBP-4],EAX
+POP EDI
 
 )";
 
@@ -2158,17 +2176,20 @@ SUB EDX,EAX
 	std::vector<unsigned char> totalMachineCode;
 	std::istringstream iss(samstr);
 	std::string line;
-	int lineNumber = 0;
+	int lineNumber = 0;//当前处理汇编语句行数
 	int totalLength = 0;  // 记录累积的机器码长度
-
+	std::vector <ResultInfo> LineResult;
 	// 逐行处理汇编代码
-	while (std::getline(iss, line)) {
+	while (std::getline(iss, line)) 
+	{
 		// 跳过空行
 		if (line.empty()) continue;
 
+		lineNumber++;
+
 		// 输出调试信息：显示当前处理的指令
 		if (is_debug) {
-			std::cout << "\n[DEBUG] 处理第 " << std::dec << ++lineNumber << " 行: " << line << std::endl;
+			std::cout << "\n[DEBUG] 处理第 " << std::dec << lineNumber << " 行: " << line << std::endl;
 			std::cout << "[DEBUG] 当前累积机器码长度: 0x" << std::hex << totalLength << std::endl;
 			std::cout << "[DEBUG] 当前指令偏移: 0x" << std::hex << totalLength << std::endl;
 		}
@@ -2179,20 +2200,33 @@ SUB EDX,EAX
 		// 解析指令并生成机器码()
 		auto instrBytes = assembler.AssembleInstruction(line, totalLength, 0);
 
-		// 输出调试信息：显示生成的机器码
-		if (is_debug) {
-			std::cout << "[DEBUG] 生成的机器码: " << assembler.BytesToHexString(instrBytes) << std::endl;
-			std::cout << "[DEBUG] 生成的字节集: " << assembler.BytesToByteSet(instrBytes) << std::endl;
-		}
-
 		// 将当前指令的机器码添加到总机器码中
 		totalMachineCode.insert(totalMachineCode.end(), instrBytes.begin(), instrBytes.end());
 
 		// 更新累积的机器码长度
-		totalLength += instrBytes.size();
+		totalLength += static_cast<int>(instrBytes.size());
+
+		// 创建新的ResultInfo对象并添加到向量中
+		ResultInfo result;
+		result.asmstr = line;
+		result.hexstr = assembler.BytesToHexString(instrBytes);
+		result.hexlen = static_cast<int>(instrBytes.size());
+		result.Bytestr = assembler.BytesToByteSet(instrBytes);
+		LineResult.push_back(result);
+
+		// 输出调试信息：显示生成的机器码
 		if (is_debug) {
+			std::cout << "[DEBUG] 生成的机器码: " << result.hexstr << std::endl;
+			std::cout << "[DEBUG] 生成的字节集: " << result.Bytestr << std::endl;
 			std::cout << "[DEBUG] 更新后的累积机器码长度: 0x" << std::hex << totalLength << std::endl;
 			std::cout << "[DEBUG] 当前总机器码: " << assembler.BytesToHexString(totalMachineCode) << std::endl;
+		}
+		else if (is_debug_line) {
+			std::cout << "\n处理第 " << std::dec << lineNumber << " 行: " << line << std::endl;
+			std::cout << result.asmstr << std::endl;
+			std::cout << result.hexstr << std::endl;
+			std::cout << result.Bytestr << std::endl;
+			std::cout << result.hexlen << std::endl;
 		}
 	}
 
