@@ -1455,7 +1455,7 @@ std::vector<unsigned char> Assembler::AssembleInstruction(const std::string& ins
 	//转换两个REG操作数指令为1个一个MRG 一个REG,;
 	if (parsedOperands.size() >= 2) {
 		if (parsedOperands[0].type == 1 && parsedOperands[1].type == 1) {
-			if (isCmdnameMatch("XOR/ADD/CMP/MOV/SUB/OR",opcode))
+			if (isCmdnameMatch("XOR/ADD/CMP/MOV/SUB/OR", opcode))
 			{
 				parsedOperands[1].type = 2;
 				parsedOperands[1].typeassign = true;
@@ -2143,22 +2143,53 @@ int main() {
 
 	// 测试用的汇编代码
 	std::string samstr = R"(
+MOV EDX,[EBP+8]
+MOV EDX,[EDX]
 XOR EAX,EAX
-MOV ECX,[EBP+8]
-JECXZ SHORT 00000018
-MOV EDI,[ECX]
-TEST EDI,EDI
+TEST EDX,EDX
+JE SHORT 00000058
+PUSH ECX
+MOV CL,[EDX]
+PUSH EBX
+XOR BL,BL
+XOR EAX,EAX
+CMP CL,20
+JNZ SHORT 00000021
+MOV CL,[EDX+1]
+INC EDX
+CMP CL,20
 JE SHORT 00000018
-MOV ECX,[EDI+4]
-JECXZ SHORT 00000018
-ADD EDI,8
-REP STOS DWORD PTR ES:[EDI]
-INC EAX
-LEAVE
+MOV CL,[EDX]
+CMP CL,2D
+JNZ SHORT 0000002C
+MOV BL,1
+JMP SHORT 00000031
+CMP CL,2B
+JNZ SHORT 00000032
+INC EDX
+MOV CL,[EDX]
+CMP CL,30
+JL SHORT 00000050
+CMP CL,39
+JG SHORT 00000050
+MOVSX ECX,CL
+LEA EAX,[EAX+EAX*4]
+INC EDX
+LEA EAX,[ECX+EAX*2-30]
+MOV CL,[EDX]
+CMP CL,30
+JGE SHORT 00000039
+TEST BL,BL
+POP EBX
+POP ECX
+JE SHORT 00000058
+NEG EAX
+POP EBP
 RETN 4
+
 )";
 
-	std::string verifystr = "33 C0 8B 4D 08 E3 11 8B 39 85 FF 74 0B 8B 4F 04 E3 06 83 C7 08 F3 AB 40 C9 C2 04 00 ";
+	std::string verifystr = "8B 55 08 8B 12 33 C0 85 D2 74 4D 51 8A 0A 53 32 DB 33 C0 80 F9 20 75 09 8A 4A 01 42 80 F9 20 74 F7 8A 0A 80 F9 2D 75 04 B3 01 EB 05 80 F9 2B 75 01 42 8A 0A 80 F9 30 7C 17 80 F9 39 7F 12 0F BE C9 8D 04 80 42 8D 44 41 D0 8A 0A 80 F9 30 7D E9 84 DB 5B 59 74 02 F7 D8 5D C2 04 00";
 
 	// 预处理汇编代码（转换大写，清理空白等）
 	samstr = assembler.preprocessAsmCode(samstr);
@@ -2234,8 +2265,6 @@ RETN 4
 
 	if (verifystr != resulthstr)
 	{
-		std::cout << "生成的机器码和效验机器码不相同" << std::endl;
-
 		// 将两个机器码字符串分割成字节数组
 		std::vector<std::string> verifyBytes;
 		std::vector<std::string> generatedBytes;
@@ -2246,30 +2275,52 @@ RETN 4
 		while (verifyStream >> temp) verifyBytes.push_back(temp);
 		while (generatedStream >> temp) generatedBytes.push_back(temp);
 
-		// 找出第一个不同的字节位置
-		size_t diffIndex = 0;
-		for (size_t i = 0; i < verifyBytes.size() && i < generatedBytes.size(); ++i) {
-			if (verifyBytes[i] != generatedBytes[i]) {
-				diffIndex = i;
-				break;
+		// 首先检查两个字节数组是否真的不同
+		bool isDifferent = false;
+		if (verifyBytes.size() != generatedBytes.size()) {
+			isDifferent = true;
+		}
+		else {
+			for (size_t i = 0; i < verifyBytes.size(); ++i) {
+				if (verifyBytes[i] != generatedBytes[i]) {
+					isDifferent = true;
+					break;
+				}
 			}
 		}
 
-		// 计算这个字节属于哪条汇编指令
-		size_t currentLength = 0;
-		size_t instructionIndex = 0;
-		for (size_t i = 0; i < LineResult.size(); ++i) {
-			if (currentLength + LineResult[i].hexlen > diffIndex) {
-				instructionIndex = i;
-				break;
+		if (isDifferent) 
+		{
+			// 找出第一个不同的字节位置
+			size_t diffIndex = 0;
+			for (size_t i = 0; i < verifyBytes.size() && i < generatedBytes.size(); ++i) {
+				if (verifyBytes[i] != generatedBytes[i]) {
+					diffIndex = i;
+					break;
+				}
 			}
-			currentLength += LineResult[i].hexlen;
-		}
 
-		std::cout << "第" << diffIndex + 1 << "个机器码不同，需要检查！" << std::endl;
-		std::cout << "效验机器码：" << verifyBytes[diffIndex] << std::endl;
-		std::cout << "生成机器码：" << generatedBytes[diffIndex] << std::endl;
-		std::cout << "对应的汇编语句：" << LineResult[instructionIndex].asmstr << std::endl;
+			// 计算这个字节属于哪条汇编指令
+			size_t currentLength = 0;
+			size_t instructionIndex = 0;
+			for (size_t i = 0; i < LineResult.size(); ++i) {
+				if (currentLength + LineResult[i].hexlen > diffIndex) {
+					instructionIndex = i;
+					break;
+				}
+				currentLength += LineResult[i].hexlen;
+			}
+
+			std::cout << "第" << diffIndex + 1 << "个机器码不同，需要检查！" << std::endl;
+			std::cout << "效验机器码：" << verifyBytes[diffIndex] << " (长度: " << verifyBytes[diffIndex].length() << ")" << std::endl;
+			std::cout << "生成机器码：" << generatedBytes[diffIndex] << " (长度: " << generatedBytes[diffIndex].length() << ")" << std::endl;
+			std::cout << "对应的汇编语句：" << LineResult[instructionIndex].asmstr << std::endl;
+		}
+		else
+		{
+			std::cout << "生成的机器码和效验机器码完全相同" << std::endl;
+
+		}
 	}
 	else {
 		std::cout << "生成的机器码和效验机器码完全相同" << std::endl;
