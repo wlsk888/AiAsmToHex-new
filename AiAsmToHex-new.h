@@ -143,7 +143,7 @@ private:
     bool needsSIB(const Operand& op);                                    // 检查是否需要SIB字节
     //bool isOperandMatchingArg_vague(const Operand& op, int argType);    // 模糊匹配操作数类型
     bool isOperandMatchingArg(const Operand& op, int argType, bool strict = false);          // 精确匹配操作数类型
-    bool isOperandMatchingbits(const std::vector<Operand>& parsedOperands, const t_cmddata& cmd, int requiredOperands);//判断模版bits是否符合
+    bool isOperandMatchingbits(const std::vector<Operand>& parsedOperands, const t_cmddata& cmd, int requiredOperands, unsigned int jmpstart = 0, int currentTotalLength = 0);//判断模版bits是否符合
     int checkBitRange(int num);//返回操作数位数
     std::string DebugTypeToStr(int type);//返回寄存器字符名称
 

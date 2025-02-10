@@ -131,9 +131,9 @@ const t_cmddata cmddata[] = {
 
 
 		{ 0x0000FE,0x000023,1,WW,WW,BB,REG,MRG,NNN,C_CMD,"AND",1508,1,true,0,false,0,false }, // AND r16,m16
-		{ 0x0000FF,0x000081,1,WW,WW,BB,REG,IMM,NNN,C_CMD,"AND",1509,1,true,4,true,2,false }, // AND r16,imm16
+		{ 0x0000FF,0x000081,1,WW,WW,BB,REG,IMM,NNN,C_CMD,"AND",1509,1,true,4,true,4,false }, // AND r16,imm16
 		{ 0x0000FE,0x000021,1,WW,WW,BB,MRG,REG,NNN,C_CMD,"AND",1510,1,true,0,false,0,false }, // AND m16,r16
-		{ 0x0000FF,0x000081,1,WW,WW,BB,MRG,IMM,NNN,C_CMD,"AND",1511,1,true,4,true,2,false }, // AND m16,imm16
+		{ 0x0000FF,0x000081,1,WW,WW,BB,MRG,IMM,NNN,C_CMD,"AND",1511,1,true,4,true,4,false }, // AND m16,imm16
 
 		// SUB指令 (1600+)																			
 		// RAC 专用模板																			
@@ -146,8 +146,8 @@ const t_cmddata cmddata[] = {
 		{ 0x0000FE,0x000028,1,BB,BB,BB,MRG,REG,NNN,C_CMD,"SUB",1605,1,true,0,false,0,false }, // SUB m8,r8
 		{ 0x0000FF,0x000080,1,BB,BB,BB,MRG,IMM,NNN,C_CMD,"SUB",1606,1,true,5,true,1,false }, // SUB m8,imm8
 
-		{ 0x0000FF,0x000083,1,WW,BB,BB,REG,IMM,NNN,C_CMD,"SUB",1607,1,true,4,true,1,false }, // AND r32,imm8
-		{ 0x0000FF,0x000083,1,WW,BB,BB,MRG,IMM,NNN,C_CMD,"SUB",1607,1,true,4,true,1,false }, // AND m32,imm8
+		{ 0x0000FF,0x000083,1,WW,BB,BB,REG,IMM,NNN,C_CMD,"SUB",1607,1,true,5,true,1,false }, // AND r32,imm8
+		{ 0x0000FF,0x000083,1,WW,BB,BB,MRG,IMM,NNN,C_CMD,"SUB",1607,1,true,5,true,1,false }, // AND m32,imm8
 
 		{ 0x0000FE,0x00002B,1,WW,WW,BB,REG,MRG,NNN,C_CMD,"SUB",1608,1,true,0,false,0,false }, // SUB r16,m16
 		{ 0x0000FF,0x000081,1,WW,WW,BB,REG,IMM,NNN,C_CMD,"SUB",1609,1,true,5,true,2,false }, // SUB r16,imm16
@@ -210,39 +210,39 @@ const t_cmddata cmddata[] = {
 
 		// Jcc指令 (2000+)
 		{ 0x0000FF, 0x000074, 1, CC,BB,BB, JOB,NNN,NNN, C_JMC,"JE/JZ",2000, 1, false, 0, true, 1, false },   // JE/JZ rel8
-		{ 0x00FFFF, 0x840F00, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JE/JZ",2001, 2, false, 0, true, 4, false },    // JE/JZ rel32
+		{ 0x00FFFF, 0x00840F, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JE/JZ",2001, 2, false, 0, true, 4, false },    // JE/JZ rel32
 		{ 0x0000FF, 0x000075, 1, CC,BB,BB, JOB,NNN,NNN, C_JMC,"JNE/JNZ",2002, 1, false, 0, true, 1, false },  // JNE/JNZ rel8
-		{ 0x00FFFF, 0x850F00, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JNE/JNZ",2003, 2, false, 0, true, 4, false },   // JNE/JNZ rel32
+		{ 0x00FFFF, 0x00850F, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JNE/JNZ",2003, 2, false, 0, true, 4, false },   // JNE/JNZ rel32
 		{ 0x0000FF, 0x00007C, 1, CC,BB,BB, JOB,NNN,NNN, C_JMC,"JL/JNGE",2004, 1, false, 0, true, 1, false },   // JL/JNGE rel8
-		{ 0x00FFFF, 0x8C0F00, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JL/JNGE",2005, 2, false, 0, true, 4, false },    // JL/JNGE rel32
+		{ 0x00FFFF, 0x008C0F, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JL/JNGE",2005, 2, false, 0, true, 4, false },    // JL/JNGE rel32
 		{ 0x0000FF, 0x00007D, 1, CC,BB,BB, JOB,NNN,NNN, C_JMC,"JGE/JNL",2006, 1, false, 0, true, 1, false },  // JGE/JNL rel8
-		{ 0x00FFFF, 0x8D0F00, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JGE/JNL",2007, 2, false, 0, true, 4, false },   // JGE/JNL rel32
+		{ 0x00FFFF, 0x008D0F, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JGE/JNL",2007, 2, false, 0, true, 4, false },   // JGE/JNL rel32
 		{ 0x0000FF, 0x00007E, 1, CC,BB,BB, JOB,NNN,NNN, C_JMC,"JLE/JNG",2008, 1, false, 0, true, 1, false },  // JLE/JNG rel8
-		{ 0x00FFFF, 0x8E0F00, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JLE/JNG",2009, 2, false, 0, true, 4, false },   // JLE/JNG rel32
+		{ 0x00FFFF, 0x008E0F, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JLE/JNG",2009, 2, false, 0, true, 4, false },   // JLE/JNG rel32
 		{ 0x0000FF, 0x00007F, 1, CC,BB,BB, JOB,NNN,NNN, C_JMC,"JG/JNLE",2010, 1, false, 0, true, 1, false },   // JG/JNLE rel8
-		{ 0x00FFFF, 0x8F0F00, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JG/JNLE",2011, 2, false, 0, true, 4, false },    // JG/JNLE rel32
+		{ 0x00FFFF, 0x008F0F, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JG/JNLE",2011, 2, false, 0, true, 4, false },    // JG/JNLE rel32
 		{ 0x0000FF, 0x000072, 1, CC,BB,BB, JOB,NNN,NNN, C_JMC,"JB/JNAE",2012, 1, false, 0, true, 1, false },   // JB/JNAE rel8
-		{ 0x00FFFF, 0x820F00, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JB/JNAE",2013, 2, false, 0, true, 4, false },    // JB/JNAE rel32
+		{ 0x00FFFF, 0x00820F, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JB/JNAE",2013, 2, false, 0, true, 4, false },    // JB/JNAE rel32
 		{ 0x0000FF, 0x000073, 1, CC,BB,BB, JOB,NNN,NNN, C_JMC,"JAE/JNB",2014, 1, false, 0, true, 1, false },  // JAE/JNB rel8
-		{ 0x00FFFF, 0x830F00, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JAE/JNB",2015, 2, false, 0, true, 4, false },   // JAE/JNB rel32
+		{ 0x00FFFF, 0x00830F, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JAE/JNB",2015, 2, false, 0, true, 4, false },   // JAE/JNB rel32
 		{ 0x0000FF, 0x000076, 1, CC,BB,BB, JOB,NNN,NNN, C_JMC,"JBE/JNA",2016, 1, false, 0, true, 1, false },  // JBE/JNA rel8
-		{ 0x00FFFF, 0x860F00, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JBE/JNA",2017, 2, false, 0, true, 4, false },   // JBE/JNA rel32
+		{ 0x00FFFF, 0x00860F, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JBE/JNA",2017, 2, false, 0, true, 4, false },   // JBE/JNA rel32
 		{ 0x0000FF, 0x000077, 1, CC,BB,BB, JOB,NNN,NNN, C_JMC,"JA/JNBE",2018, 1, false, 0, true, 1, false },   // JA/JNBE rel8
-		{ 0x00FFFF, 0x870F00, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JA/JNBE",2019, 2, false, 0, true, 4, false },    // JA/JNBE rel32
+		{ 0x00FFFF, 0x00870F, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JA/JNBE",2019, 2, false, 0, true, 4, false },    // JA/JNBE rel32
 
 		// jcc指令1(2100+)
 		{ 0x0000FF, 0x000078, 1, CC,BB,BB, JOB,NNN,NNN, C_JMC,"JS",2100, 1, false, 0, true, 1, false },   // JS rel8
-		{ 0x00FFFF, 0x880F00, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JS",2101, 2, false, 0, true, 4, false },    // JS rel32
+		{ 0x00FFFF, 0x00880F, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JS",2101, 2, false, 0, true, 4, false },    // JS rel32
 		{ 0x0000FF, 0x000079, 1, CC,BB,BB, JOB,NNN,NNN, C_JMC,"JNS",2102, 1, false, 0, true, 1, false },  // JNS rel8
-		{ 0x00FFFF, 0x890F00, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JNS",2103, 2, false, 0, true, 4, false },   // JNS rel32
+		{ 0x00FFFF, 0x00890F, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JNS",2103, 2, false, 0, true, 4, false },   // JNS rel32
 		{ 0x0000FF, 0x000070, 1, CC,BB,BB, JOB,NNN,NNN, C_JMC,"JO",2104, 1, false, 0, true, 1, false },   // JO rel8
-		{ 0x00FFFF, 0x800F00, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JO",2105, 2, false, 0, true, 4, false },    // JO rel32
+		{ 0x00FFFF, 0x00800F, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JO",2105, 2, false, 0, true, 4, false },    // JO rel32
 		{ 0x0000FF, 0x000071, 1, CC,BB,BB, JOB,NNN,NNN, C_JMC,"JNO",2106, 1, false, 0, true, 1, false },  // JNO rel8
-		{ 0x00FFFF, 0x810F00, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JNO",2107, 2, false, 0, true, 4, false },   // JNO rel32
+		{ 0x00FFFF, 0x00810F, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JNO",2107, 2, false, 0, true, 4, false },   // JNO rel32
 		{ 0x0000FF, 0x00007A, 1, CC,BB,BB, JOB,NNN,NNN, C_JMC,"JP/JPE",2108, 1, false, 0, true, 1, false },   // JP/JPE rel8
-		{ 0x00FFFF, 0x8A0F00, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JP/JPE",2109, 2, false, 0, true, 4, false },    // JP/JPE rel32
+		{ 0x00FFFF, 0x008A0F, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JP/JPE",2109, 2, false, 0, true, 4, false },    // JP/JPE rel32
 		{ 0x0000FF, 0x00007B, 1, CC,BB,BB, JOB,NNN,NNN, C_JMC,"JNP/JPO",2110, 1, false, 0, true, 1, false },  // JNP/JPO rel8
-		{ 0x00FFFF, 0x8B0F00, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JNP/JPO",2111, 2, false, 0, true, 4, false },   // JNP/JPO rel32
+		{ 0x00FFFF, 0x008B0F, 2, BB,BB,BB, JOW,NNN,NNN, C_JMC,"JNP/JPO",2111, 2, false, 0, true, 4, false },   // JNP/JPO rel32
 		{ 0x0000FF, 0x0000E3, 1, CC,BB,BB, JOB,NNN,NNN, C_JMC,"JCXZ/JECXZ",2112, 1, false, 0, true, 1, false }, // JCXZ/JECXZ rel8
 
 		// JMP指令(2200+)
@@ -526,7 +526,7 @@ const t_cmddata cmddata[] = {
 		{ 0x0000FF, 0x000031, 1, BB, BB, BB, NNN, NNN, NNN, C_CMD, "RDTSC", 6800, 1, false, 0, false, 0, false }, // RDTSC
 
 		// CPUID指令 (6900+)
-		{ 0x0000FF, 0x0000A2, 1, BB, BB, BB, NNN, NNN, NNN, C_CMD, "CPUID", 6900, 1, false, 0, false, 0, false }, // CPUID
+		{ 0x00FFFF, 0x00A20F, 2, BB, BB, BB, NNN, NNN, NNN, C_CMD, "CPUID", 6900, 2, false, 0, false, 0, false }, // CPUID
 
 		// IN / OUT指令 (7000+)
 		{ 0x0000FF, 0x0000E4, 1, BB, BB, BB, IMM, NNN, NNN, C_CMD, "IN", 7000, 1, false, 0, true, 1, false },  // IN AL, imm8
@@ -542,13 +542,13 @@ const t_cmddata cmddata[] = {
 		{ 0x0000FF, 0x0000A7, 1, WW, WW, BB, NNN, NNN, NNN, C_CMD, "CMPSW", 7204, 1, false, 0, false, 0, false }, // CMPSW
 		{ 0x00FFFF, 0x00B80F, 2, WW, WW, BB, REG, MRG, NNN, C_CMD, "POPCNT", 7205, 2, true, 0, false, 0, false }, // POPCNT r32, m32
 		{ 0x00FFFF, 0x00BC0F, 2, WW, WW, BB, REG, MRG, NNN, C_CMD, "TZCNT", 7206, 2, true, 0, false, 0, false }, // TZCNT r32, m32
-		{ 0x0000FF, 0x000001, 1, WW, WW, BB, MRG, NNN, NNN, C_CMD, "LGDT", 7207, 1, true, 0, false, 0, false }, // LGDT m32
-		{ 0x0000FF, 0x000001, 1, WW, WW, BB, MRG, NNN, NNN, C_CMD, "SGDT", 7208, 1, true, 0, false, 0, false }, // SGDT m32
-		{ 0x0000FF, 0x000001, 1, WW, WW, BB, MRG, NNN, NNN, C_CMD, "LIDT", 7209, 1, true, 0, false, 0, false }, // LIDT m32
-		{ 0x0000FF, 0x000001, 1, WW, WW, BB, MRG, NNN, NNN, C_CMD, "SIDT", 7210, 1, true, 0, false, 0, false }, // SIDT m32
-		{ 0x0000FF, 0x000001, 1, WW, WW, BB, MRG, NNN, NNN, C_CMD, "LMSW", 7211, 1, true, 0, false, 0, false }, // LMSW m32
-		{ 0x0000FF, 0x000001, 1, WW, WW, BB, MRG, NNN, NNN, C_CMD, "SMSW", 7212, 1, true, 0, false, 0, false }, // SMSW m32
-		{ 0x0000FF, 0x000008, 1, BB, BB, BB, NNN, NNN, NNN, C_CMD, "INVD", 7213, 1, false, 0, false, 0, false }, // INVD
+		{ 0x00FFFF, 0x00010F, 2, WW, WW, BB, MRG, NNN, NNN, C_CMD, "LGDT", 7207, 2, true, 2, false, 0, false }, // LGDT m32
+		{ 0x00FFFF, 0x00010F, 2, WW, WW, BB, MRG, NNN, NNN, C_CMD, "SGDT", 7208, 2, true, 0, false, 0, false }, // SGDT m32
+		{ 0x00FFFF, 0x00010F, 2, WW, WW, BB, MRG, NNN, NNN, C_CMD, "LIDT", 7209, 2, true, 3, false, 0, false }, // LIDT m32
+		{ 0x00FFFF, 0x00010F, 2, WW, WW, BB, MRG, NNN, NNN, C_CMD, "SIDT", 7210, 2, true, 1, false, 0, false }, // SIDT m32
+		{ 0x00FFFF, 0x00010F, 2, WW, WW, BB, MRG, NNN, NNN, C_CMD, "LMSW", 7211, 2, true, 6, false, 0, false }, // LMSW m32
+		{ 0x00FFFF, 0x00010F, 2, WW, WW, BB, MRG, NNN, NNN, C_CMD, "SMSW", 7212, 2, true, 4, false, 0, false }, // SMSW m32
+		{ 0x0000FF, 0x000008, 1, BB, BB, BB, NNN, NNN, NNN, C_CMD, "INVD", 7213, 2, false, 0, false, 0, false }, // INVD
 		{ 0x0000FF, 0x000009, 1, BB, BB, BB, NNN, NNN, NNN, C_CMD, "WBINVD", 7214, 1, false, 0, false, 0, false }, // WBINVD
 		{ 0x0000FF, 0x000032, 1, BB, BB, BB, NNN, NNN, NNN, C_CMD, "RDMSR", 7215, 1, false, 0, false, 0, false }, // RDMSR
 		{ 0x0000FF, 0x000030, 1, BB, BB, BB, NNN, NNN, NNN, C_CMD, "WRMSR", 7216, 1, false, 0, false, 0, false }, // WRMSR
@@ -972,13 +972,20 @@ Operand Assembler::parseOperand(const std::string& str, int def_num_base) {
 }
 
 //操作数位数匹配(操作数数据,模版数据，比较几个,是否严格)
-bool Assembler::isOperandMatchingbits(const std::vector<Operand>& parsedOperands, const t_cmddata& cmd, int requiredOperands) {
+bool Assembler::isOperandMatchingbits(const std::vector<Operand>& parsedOperands, const t_cmddata& cmd, int requiredOperands, unsigned int jmpstart, int currentTotalLength) {
 	bool cmd_bits_match_ok = true;
 	int nums[3];
 	nums[0] = cmd.bits1;
 	nums[1] = cmd.bits2;
 	nums[2] = cmd.bits3;
 	if (cmd.type == C_JMC || cmd.type == C_CAL || cmd.type == C_LOOP) {
+		if (cmd.arg1 == 6 && parsedOperands[0].type == IMM) {
+			int offset = parsedOperands[0].disp - jmpstart - (currentTotalLength + 2);
+			if (offset < -128 || offset > 127) {
+				std::cout << "不在短跳转范围" << std::endl;
+				cmd_bits_match_ok = false;
+			}
+		}
 		return cmd_bits_match_ok;
 	}
 	if (requiredOperands >= 2 && cmd.arg1 == MRG && cmd.arg2 != IMM && parsedOperands[0].type == MRG) {
@@ -1101,26 +1108,32 @@ std::string Assembler::DebugTypeToStr(int type) {
 
 //判断模版汇编指令名称和某字符串是否相同
 bool Assembler::isCmdnameMatch(const char* cmdName, const std::string& opcode) {
-	if (!cmdName) {
-		return false;
-	}
-	if (opcode.empty()) {
-		return false;
-	}
-	if (cmdName[0] == '\0') {
+	if (!cmdName || opcode.empty() || cmdName[0] == '\0') {
 		return false;
 	}
 
+	// 查找 opcode 在 cmdName 中的位置
 	const char* pos = strstr(cmdName, opcode.c_str());
-	if (!pos) {
-		return false;
+	while (pos) {
+		// 检查前面是否是'/'或者cmdName的开始
+		bool isStartValid = (pos == cmdName || *(pos - 1) == '/');
+
+		// 检查后面是否是'/'或者cmdName的结束
+		bool isEndValid = (pos[opcode.length()] == '/' || pos[opcode.length()] == '\0');
+
+		// 如果匹配的开始和结束位置都有效，则匹配成功
+		if (isStartValid && isEndValid) {
+			return true;
+		}
+
+		// 查找下一个匹配
+		pos = strstr(pos + 1, opcode.c_str());
 	}
-	bool isStartValid = (pos == cmdName || *(pos - 1) == '/');
-	bool isEndValid = (pos[opcode.length()] == '/' || pos[opcode.length()] == '\0');
-	return isStartValid && isEndValid;
+
+	return false;
 }
 
-//instruction:汇编语句;currentTotalLength:累计指令长度;def_num_base:立即数默认进制-0为16进制,1为10进制其他为16进制;jmpstart:跳转立即数的起始基址
+//instruction:汇编语句;currentTotalLength:累计指令长度;def_num_base:立即数默认进制:0为16进制,1为10进制,其他为16进制;jmpstart:跳转立即数的起始基址
 std::vector<unsigned char> Assembler::AssembleInstruction(const std::string& instruction, int currentTotalLength, int def_num_base, unsigned int jmpstart) {
 	std::vector<unsigned char> machineCode;
 	std::string upperInst = toUpper(instruction);
@@ -1303,7 +1316,7 @@ std::vector<unsigned char> Assembler::AssembleInstruction(const std::string& ins
 			}
 		}
 		else if (opcode == "SCASW") {
-			machineCode.push_back(0x66); // 操作数大小前缀
+			//machineCode.push_back(0x66); // 操作数大小前缀
 			machineCode.push_back(0xAF);
 			if (is_debug) {
 				std::cout << "[DEBUG] 添加SCASW操作码: 66 AFH" << std::endl;
@@ -1322,7 +1335,7 @@ std::vector<unsigned char> Assembler::AssembleInstruction(const std::string& ins
 			}
 		}
 		else if (opcode == "STOSW") {
-			machineCode.push_back(0x66);
+			//machineCode.push_back(0x66);
 			machineCode.push_back(0xAB);
 			if (is_debug) {
 				std::cout << "[DEBUG] 添加STOSW操作码: 66 ABH" << std::endl;
@@ -1341,7 +1354,7 @@ std::vector<unsigned char> Assembler::AssembleInstruction(const std::string& ins
 			}
 		}
 		else if (opcode == "LODSW") {
-			machineCode.push_back(0x66);
+			//machineCode.push_back(0x66);
 			machineCode.push_back(0xAD);
 			if (is_debug) {
 				std::cout << "[DEBUG] 添加LODSW操作码: 66 ADH" << std::endl;
@@ -1360,7 +1373,7 @@ std::vector<unsigned char> Assembler::AssembleInstruction(const std::string& ins
 			}
 		}
 		else if (opcode == "CMPSW") {
-			machineCode.push_back(0x66);
+			//machineCode.push_back(0x66);
 			machineCode.push_back(0xA7);
 			if (is_debug) {
 				std::cout << "[DEBUG] 添加CMPSW操作码: 66 A7H" << std::endl;
@@ -1442,30 +1455,10 @@ std::vector<unsigned char> Assembler::AssembleInstruction(const std::string& ins
 	//转换两个REG操作数指令为1个一个MRG 一个REG,;
 	if (parsedOperands.size() >= 2) {
 		if (parsedOperands[0].type == 1 && parsedOperands[1].type == 1) {
-			if (opcode == "XOR" && parsedOperands[0].reg == parsedOperands[1].reg && parsedOperands[0].bits != BB) {
+			if (isCmdnameMatch("XOR/ADD/CMP/MOV/SUB/OR",opcode))
+			{
 				parsedOperands[1].type = 2;
 				parsedOperands[1].typeassign = true;
-			}
-			else if (opcode == "XOR" && parsedOperands[0].bits == BB) {
-				parsedOperands[0].type = 2;
-				parsedOperands[0].typeassign = true;
-			}
-			else if (opcode == "ADD") {
-				parsedOperands[1].type = 2;
-				parsedOperands[1].typeassign = true;
-			}
-			//MOV AL,DL;MOV EDX,ECX
-			else if (opcode == "MOV") {
-				parsedOperands[1].type = 2;
-				parsedOperands[1].typeassign = true;
-			}
-			else if (opcode == "SUB") {
-				parsedOperands[1].type = 2;
-				parsedOperands[1].typeassign = true;
-			}
-			else if (opcode == "OR" && parsedOperands[0].bits == BB) {
-				parsedOperands[0].type = 2;
-				parsedOperands[0].typeassign = true;
 			}
 			else if (parsedOperands[0].bits == BB) {
 				parsedOperands[1].type = 2;
@@ -1478,6 +1471,7 @@ std::vector<unsigned char> Assembler::AssembleInstruction(const std::string& ins
 
 		}
 	}
+
 	if (is_debug) {
 		std::cout << "[DEBUG] 解析完成，操作数数量: " << parsedOperands.size() << std::endl;
 		for (size_t i = 0; i < parsedOperands.size(); ++i) {
@@ -1556,7 +1550,7 @@ std::vector<unsigned char> Assembler::AssembleInstruction(const std::string& ins
 		}
 		if (match) {
 			//检查操作数位数匹配
-			if (!isOperandMatchingbits(parsedOperands, cmd, requiredOperands)) {
+			if (!isOperandMatchingbits(parsedOperands, cmd, requiredOperands, jmpstart, currentTotalLength)) {
 				if (is_debug) {
 					std::cout << "[DEBUG] 严格匹配，操作数不匹配，跳过模板 " << std::dec << cmd.template_id
 						<< std::endl;
@@ -1614,7 +1608,7 @@ std::vector<unsigned char> Assembler::AssembleInstruction(const std::string& ins
 
 				if (matches) {
 					//检查操作数位数匹配
-					if (!isOperandMatchingbits(parsedOperands, cmd, 1)) {
+					if (!isOperandMatchingbits(parsedOperands, cmd, 1, jmpstart, currentTotalLength)) {
 						if (is_debug) {
 							std::cout << "[DEBUG] 模糊匹配，操作数不匹配，跳过模板 " << std::dec << cmd.template_id
 								<< std::endl;
@@ -1681,10 +1675,13 @@ std::vector<unsigned char> Assembler::generateMachineCode(const t_cmddata& cmd, 
 			if (is_debug) {
 				std::cout << "[DEBUG] 添加操作数大小前缀: 66H" << std::endl;
 			}
-		}else if (parsedOperands[0].type==MRG && parsedOperands[1].bits == W16) {
-			machineCode.push_back(PREFIX_OPERAND);
-			if (is_debug) {
-				std::cout << "[DEBUG] 添加操作数大小前缀: 66H" << std::endl;
+		}
+		else if (parsedOperands.size() > 1) {
+			if (parsedOperands[0].type == MRG && parsedOperands[1].bits == W16) {
+				machineCode.push_back(PREFIX_OPERAND);
+				if (is_debug) {
+					std::cout << "[DEBUG] 添加操作数大小前缀: 66H" << std::endl;
+				}
 			}
 		}
 
@@ -1704,7 +1701,7 @@ std::vector<unsigned char> Assembler::generateMachineCode(const t_cmddata& cmd, 
 	}
 
 	// 2. 生成基本操作码
-	if (cmd.opcode_bytes == 2) {
+	if (cmd.len == 2) {
 		// 处理两字节操作码
 		unsigned char opcode1 = static_cast<unsigned char>(cmd.code & 0xFF);
 		unsigned char opcode2 = static_cast<unsigned char>((cmd.code >> 8) & 0xFF);
@@ -1800,11 +1797,11 @@ std::vector<unsigned char> Assembler::generateMachineCode(const t_cmddata& cmd, 
 				int immSize;
 				if (cmd.imm_bytes > 0) {
 					// 修改这里：根据操作数实际大小确定立即数大小
-					if (parsedOperands[i].bits == W16) {  // 检查目标操作数是否是16位
+					if (parsedOperands[0].bits == W16) {  // 检查目标操作数是否是16位
 						immSize = 2;  // 16位立即数
 					}
 					else {
-							immSize = cmd.imm_bytes;  // 使用模板定义的大小
+						immSize = cmd.imm_bytes;  // 使用模板定义的大小
 					}
 				}
 				else {
@@ -2052,7 +2049,7 @@ unsigned char Assembler::generateModRMByte(const t_cmddata& cmd, const std::vect
 		else if (reg == 0 && cmd.arg1 == REG && cmd.arg2 == MRG) {
 			if (operands[1].typeassign) {
 				//例如MOV AL,DL; MOV EDX,ECX
-				if (isCmdnameMatch("MOV/ADD/SUB", cmd.name)) {
+				if (isCmdnameMatch("XOR/ADD/CMP/MOV/SUB/OR/", cmd.name)) {
 					reg = operands[0].reg;
 				}
 				else {
@@ -2100,7 +2097,7 @@ unsigned char Assembler::generateModRMByte(const t_cmddata& cmd, const std::vect
 				mod = 0b11;
 				if (operands[1].typeassign) {
 					//例如MOV AL,DL ; MOV EDX,ECX
-					if (isCmdnameMatch("MOV/ADD/SUB", cmd.name)) {
+					if (isCmdnameMatch("XOR/ADD/CMP/MOV/SUB/OR/", cmd.name)) {
 						rm = operands[1].reg;
 					}
 					else {
@@ -2138,7 +2135,7 @@ unsigned char Assembler::generateModRMByte(const t_cmddata& cmd, const std::vect
 
 int main() {
 	// 设置调试开关
-	bool is_debug = false;  // 控制调试输出的开关
+	bool is_debug = true;  // 控制调试输出的开关
 	bool is_debug_line = true; // 控制单行输出的开关
 	Assembler assembler;
 	assembler.setDebug(is_debug);  // 设置汇编器的调试状态
@@ -2146,28 +2143,22 @@ int main() {
 
 	// 测试用的汇编代码
 	std::string samstr = R"(
-PUSH EDI
-MOV EDX,[EBP+8]
-MOV EDI,[EBP-4]
-DEC EDI
-XOR ECX,ECX
-MOV CL,8
-MOV AL,DL
-AND AL,F
-CMP AL,9
-JA SHORT 00000018
-ADD AL,30
-JMP SHORT 0000001A
-ADD AL,37
-MOV [ECX+EDI],AL
-SHR EDX,4
-JE SHORT 00000024
-LOOPD SHORT 0000000C
-LEA EAX,[ECX+EDI]
-MOV [EBP-4],EAX
-POP EDI
-
+XOR EAX,EAX
+MOV ECX,[EBP+8]
+JECXZ SHORT 00000018
+MOV EDI,[ECX]
+TEST EDI,EDI
+JE SHORT 00000018
+MOV ECX,[EDI+4]
+JECXZ SHORT 00000018
+ADD EDI,8
+REP STOS DWORD PTR ES:[EDI]
+INC EAX
+LEAVE
+RETN 4
 )";
+
+	std::string verifystr = "33 C0 8B 4D 08 E3 11 8B 39 85 FF 74 0B 8B 4F 04 E3 06 83 C7 08 F3 AB 40 C9 C2 04 00 ";
 
 	// 预处理汇编代码（转换大写，清理空白等）
 	samstr = assembler.preprocessAsmCode(samstr);
@@ -2180,7 +2171,7 @@ POP EDI
 	int totalLength = 0;  // 记录累积的机器码长度
 	std::vector <ResultInfo> LineResult;
 	// 逐行处理汇编代码
-	while (std::getline(iss, line)) 
+	while (std::getline(iss, line))
 	{
 		// 跳过空行
 		if (line.empty()) continue;
@@ -2194,8 +2185,8 @@ POP EDI
 			std::cout << "[DEBUG] 当前指令偏移: 0x" << std::hex << totalLength << std::endl;
 		}
 
-		debug_pause_str = "MOV [EAX], 2";
-		debug_pause_num = 2902;
+		debug_pause_str = "";
+		debug_pause_num = 1410;
 
 		// 解析指令并生成机器码()
 		auto instrBytes = assembler.AssembleInstruction(line, totalLength, 0);
@@ -2222,21 +2213,67 @@ POP EDI
 			std::cout << "[DEBUG] 当前总机器码: " << assembler.BytesToHexString(totalMachineCode) << std::endl;
 		}
 		else if (is_debug_line) {
-			std::cout << "\n处理第 " << std::dec << lineNumber << " 行: " << line << std::endl;
-			std::cout << result.asmstr << std::endl;
-			std::cout << result.hexstr << std::endl;
-			std::cout << result.Bytestr << std::endl;
-			std::cout << result.hexlen << std::endl;
+			std::cout << "\n处理第 " << std::dec << lineNumber << " 行: " << std::endl;
+			std::cout << "汇编语句：" << result.asmstr << std::endl;
+			std::cout << "机器码：" << result.hexstr << std::endl;
+			std::cout << "字节集：" << result.Bytestr << std::endl;
+			std::cout << "机器码长度：" << result.hexlen << std::endl;
 		}
 	}
 
 
 	// Output final result
-	std::cout << "\n最终生成的机器码：" << std::endl;
-	std::cout << "十六进制格式：" << assembler.BytesToHexString(totalMachineCode) << std::endl;
-	std::cout << "字节集格式：" << assembler.BytesToByteSet(totalMachineCode) << std::endl;
-	std::cout << "总长度：0x" << std::hex << totalMachineCode.size() << " ("
+	std::string resulthstr = assembler.BytesToHexString(totalMachineCode);
+	std::cout << "\n生成机器码：" << resulthstr << std::endl;
+	std::cout << "\n效验机器码：" << verifystr << std::endl;
+	std::cout << "\n字节集格式：" << assembler.BytesToByteSet(totalMachineCode) << std::endl;
+	std::cout << "\n总长度：0x" << std::hex << totalMachineCode.size() << " ("
 		<< std::dec << totalMachineCode.size() << " 字节)" << std::endl;
+	std::cout << "\n" << std::endl;
+
+
+	if (verifystr != resulthstr)
+	{
+		std::cout << "生成的机器码和效验机器码不相同" << std::endl;
+
+		// 将两个机器码字符串分割成字节数组
+		std::vector<std::string> verifyBytes;
+		std::vector<std::string> generatedBytes;
+		std::string temp;
+		std::istringstream verifyStream(verifystr);
+		std::istringstream generatedStream(resulthstr);
+
+		while (verifyStream >> temp) verifyBytes.push_back(temp);
+		while (generatedStream >> temp) generatedBytes.push_back(temp);
+
+		// 找出第一个不同的字节位置
+		size_t diffIndex = 0;
+		for (size_t i = 0; i < verifyBytes.size() && i < generatedBytes.size(); ++i) {
+			if (verifyBytes[i] != generatedBytes[i]) {
+				diffIndex = i;
+				break;
+			}
+		}
+
+		// 计算这个字节属于哪条汇编指令
+		size_t currentLength = 0;
+		size_t instructionIndex = 0;
+		for (size_t i = 0; i < LineResult.size(); ++i) {
+			if (currentLength + LineResult[i].hexlen > diffIndex) {
+				instructionIndex = i;
+				break;
+			}
+			currentLength += LineResult[i].hexlen;
+		}
+
+		std::cout << "第" << diffIndex + 1 << "个机器码不同，需要检查！" << std::endl;
+		std::cout << "效验机器码：" << verifyBytes[diffIndex] << std::endl;
+		std::cout << "生成机器码：" << generatedBytes[diffIndex] << std::endl;
+		std::cout << "对应的汇编语句：" << LineResult[instructionIndex].asmstr << std::endl;
+	}
+	else {
+		std::cout << "生成的机器码和效验机器码完全相同" << std::endl;
+	}
 
 	return 0;
 }
