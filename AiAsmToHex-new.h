@@ -131,7 +131,7 @@ public:
 
 private:
     // 内部辅助函数
-    bool isCmdnameMatch(const char* cmdName, const std::string& opcode);//判断模版name和指令名字是否相同
+    //bool isCmdnameMatch(const char* cmdName, const std::string& opcode);//判断模版name和指令名字是否相同
     std::string toUpper(const std::string& str);                          // 转换为大写
     int parseRegister(const std::string& reg, int& Regbits);          // 解析寄存器
     int parseImmediate(const std::string& imm, int def_num_base = 0);
@@ -158,10 +158,10 @@ private:
     int totalLength;                            // 已生成机器码的总长度
     bool is_debug;                              // 调试模式标志
 
-    // 辅助函数
-    Operand createOperand(int type = NNN, int reg = -1, int base = -1, int index = -1,
-        int scale = 1, int disp = 0, int bits = 0, bool isExtended = false,
-        const std::string& segment = "");  // 创建操作数对象
+    //// 辅助函数
+    //Operand createOperand(int type = NNN, int reg = -1, int base = -1, int index = -1,
+    //    int scale = 1, int disp = 0, int bits = 0, bool isExtended = false,
+    //    const std::string& segment = "");  // 创建操作数对象
 
 // 跳转相关的辅助函数
     bool needsModRM(const t_cmddata& cmd, const std::vector<Operand>& operands); // 判断是否需要ModR/M

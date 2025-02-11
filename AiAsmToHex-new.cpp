@@ -186,6 +186,7 @@ const t_cmddata cmddata[] = {
 		{ 0x0000FF,0x000081,1,WW,WW,BB,REG,IMM,NNN,C_CMD,"ADC",1807,1,true,2,true,0,false }, // ADC r16/32,imm16/32
 		{ 0x0000FE,0x000011,1,WW,WW,BB,MRG,REG,NNN,C_CMD,"ADC",1808,1,true,0,false,0,false }, // ADC m16/32,r16/32
 		{ 0x0000FF,0x000081,1,WW,WW,BB,MRG,IMM,NNN,C_CMD,"ADC",1809,1,true,2,true,0,false }, // ADC m16/32,imm16/32
+
 		{ 0x0000FF,0x000083,1,WW,BB,BB,REG,IMM,NNN,C_CMD,"ADC",1810,1,true,2,true,1,false }, // ADC r32,imm8
 		{ 0x0000FF,0x000083,1,WW,BB,BB,MRG,IMM,NNN,C_CMD,"ADC",1810,1,true,2,true,1,false }, // ADC m32,imm8
 
@@ -965,7 +966,7 @@ Operand Assembler::parseOperand(const std::string& str, int def_num_base) {
 		operand.bits = checkBitRange(operand.disp);
 	}
 	if (is_debug) {
-		std::cout << "[DEBUG] 识别为立即数: 值=0x" << std::dec << operand.disp
+		std::cout << "[DEBUG] 识别为立即数: 值=" << std::dec << operand.disp
 			<< ", bits=" << operand.bits << std::endl;
 	}
 	return operand;
@@ -1107,7 +1108,7 @@ std::string Assembler::DebugTypeToStr(int type) {
 }
 
 //判断模版汇编指令名称和某字符串是否相同
-bool Assembler::isCmdnameMatch(const char* cmdName, const std::string& opcode) {
+bool isCmdnameMatch(const char* cmdName, const std::string& opcode) {
 	if (!cmdName || opcode.empty() || cmdName[0] == '\0') {
 		return false;
 	}
@@ -1455,8 +1456,20 @@ std::vector<unsigned char> Assembler::AssembleInstruction(const std::string& ins
 	//转换两个REG操作数指令为1个一个MRG 一个REG,;
 	if (parsedOperands.size() >= 2) {
 		if (parsedOperands[0].type == 1 && parsedOperands[1].type == 1) {
-			if (isCmdnameMatch("XOR/ADD/CMP/MOV/SUB/OR", opcode))
+			if (isCmdnameMatch("XOR/ADD/CMP/MOV/SUB/OR/AND/TEST", opcode))
 			{
+				if (parsedOperands[0].reg == 0 && parsedOperands[0].bits == W32) {
+					parsedOperands[0].type = 2;
+					parsedOperands[0].typeassign = true;
+				}
+				else
+				{
+					parsedOperands[1].type = 2;
+					parsedOperands[1].typeassign = true;
+				}
+
+			}
+			else if (isCmdnameMatch("SBB", opcode)) {
 				parsedOperands[1].type = 2;
 				parsedOperands[1].typeassign = true;
 			}
@@ -1643,6 +1656,12 @@ std::vector<unsigned char> Assembler::AssembleInstruction(const std::string& ins
 }
 
 int Assembler::checkBitRange(int num) {
+	// 处理负数
+	if (num < 0) {
+		num = ~num; // 取反
+		num++;      // 加一，得到补码形式的绝对值
+	}
+
 	if (num <= 0xFF) { // 8位范围：0 ~ 255
 		return 0;
 	}
@@ -1668,37 +1687,42 @@ std::vector<unsigned char> Assembler::generateMachineCode(const t_cmddata& cmd, 
 	}
 
 	// 1. 生成前缀
-	if (!parsedOperands.empty()) {
-		// 对于16位操作数，添加操作数大小前缀
-		if (parsedOperands[0].bits == W16) {
-			machineCode.push_back(PREFIX_OPERAND);
-			if (is_debug) {
-				std::cout << "[DEBUG] 添加操作数大小前缀: 66H" << std::endl;
-			}
-		}
-		else if (parsedOperands.size() > 1) {
-			if (parsedOperands[0].type == MRG && parsedOperands[1].bits == W16) {
+	if (cmd.type != C_JMC && cmd.type != C_CAL && cmd.type != C_LOOP) {
+		if (!parsedOperands.empty())
+		{
+			// 对于16位操作数，添加操作数大小前缀
+			if (parsedOperands[0].bits == W16) {
 				machineCode.push_back(PREFIX_OPERAND);
 				if (is_debug) {
 					std::cout << "[DEBUG] 添加操作数大小前缀: 66H" << std::endl;
 				}
 			}
-		}
-
-		// 处理段前缀
-		if (!parsedOperands[0].segment.empty()) {
-			auto it = segmentPrefixes.find(parsedOperands[0].segment);
-			if (it != segmentPrefixes.end()) {
-				machineCode.push_back(it->second);
-				if (is_debug) {
-					std::cout << "[DEBUG] 添加段前缀: " << std::hex << static_cast<int>(it->second) << "H" << std::endl;
+			else if (parsedOperands.size() > 1) {
+				if (parsedOperands[0].type == MRG && parsedOperands[1].bits == W16) {
+					machineCode.push_back(PREFIX_OPERAND);
+					if (is_debug) {
+						std::cout << "[DEBUG] 添加操作数大小前缀: 66H" << std::endl;
+					}
 				}
 			}
+
+			// 处理段前缀
+			if (!parsedOperands[0].segment.empty()) {
+				auto it = segmentPrefixes.find(parsedOperands[0].segment);
+				if (it != segmentPrefixes.end()) {
+					machineCode.push_back(it->second);
+					if (is_debug) {
+						std::cout << "[DEBUG] 添加段前缀: " << std::hex << static_cast<int>(it->second) << "H" << std::endl;
+					}
+				}
+			}
+
+			auto prefixes = generatePrefixes(parsedOperands[0]);
+			machineCode.insert(machineCode.end(), prefixes.begin(), prefixes.end());
 		}
 
-		auto prefixes = generatePrefixes(parsedOperands[0]);
-		machineCode.insert(machineCode.end(), prefixes.begin(), prefixes.end());
 	}
+
 
 	// 2. 生成基本操作码
 	if (cmd.len == 2) {
@@ -1797,8 +1821,15 @@ std::vector<unsigned char> Assembler::generateMachineCode(const t_cmddata& cmd, 
 				int immSize;
 				if (cmd.imm_bytes > 0) {
 					// 修改这里：根据操作数实际大小确定立即数大小
-					if (parsedOperands[0].bits == W16) {  // 检查目标操作数是否是16位
+					if (cmd.type != C_JMC && cmd.type != C_CAL && cmd.type != C_LOOP && parsedOperands[i].bits == W16) {  // 检查目标操作数是否是16位
 						immSize = 2;  // 16位立即数
+						for (int n = 0; n < parsedOperands.size(); ++n) {
+							if (parsedOperands[n].bits > 1)
+							{
+								immSize = 4;
+							}
+						}
+
 					}
 					else {
 						immSize = cmd.imm_bytes;  // 使用模板定义的大小
@@ -1964,21 +1995,21 @@ std::string Assembler::preprocessAsmCode(const std::string& code) {
 	return result;
 }
 
-// 创建一个新的操作数对象
-Operand Assembler::createOperand(int type, int reg, int base, int index,
-	int scale, int bits, int disp, bool isExtended,
-	const std::string& segment) {
-	Operand op;
-	op.type = type;          // 操作数类型
-	op.reg = reg;            // 寄存器编号
-	op.base = base;          // 基址寄存器
-	op.index = index;        // 变址寄存器
-	op.scale = scale;        // 比例因子
-	op.disp = disp;          // 偏移量
-	op.bits = 0;
-	op.segment = segment;    // 段前缀
-	return op;
-}
+//// 创建一个新的操作数对象
+//Operand Assembler::createOperand(int type, int reg, int base, int index,
+//	int scale, int bits, int disp, bool isExtended,
+//	const std::string& segment) {
+//	Operand op;
+//	op.type = type;          // 操作数类型
+//	op.reg = reg;            // 寄存器编号
+//	op.base = base;          // 基址寄存器
+//	op.index = index;        // 变址寄存器
+//	op.scale = scale;        // 比例因子
+//	op.disp = disp;          // 偏移量
+//	op.bits = 0;
+//	op.segment = segment;    // 段前缀
+//	return op;
+//}
 
 
 
@@ -2049,7 +2080,7 @@ unsigned char Assembler::generateModRMByte(const t_cmddata& cmd, const std::vect
 		else if (reg == 0 && cmd.arg1 == REG && cmd.arg2 == MRG) {
 			if (operands[1].typeassign) {
 				//例如MOV AL,DL; MOV EDX,ECX
-				if (isCmdnameMatch("XOR/ADD/CMP/MOV/SUB/OR/", cmd.name)) {
+				if (isCmdnameMatch("XOR/ADD/CMP/MOV/SUB/OR/AND/TEST/SBB", cmd.name)) {
 					reg = operands[0].reg;
 				}
 				else {
@@ -2097,7 +2128,7 @@ unsigned char Assembler::generateModRMByte(const t_cmddata& cmd, const std::vect
 				mod = 0b11;
 				if (operands[1].typeassign) {
 					//例如MOV AL,DL ; MOV EDX,ECX
-					if (isCmdnameMatch("XOR/ADD/CMP/MOV/SUB/OR/", cmd.name)) {
+					if (isCmdnameMatch("XOR/ADD/CMP/MOV/SUB/OR/AND/TEST/SBB", cmd.name)) {
 						rm = operands[1].reg;
 					}
 					else {
@@ -2133,6 +2164,22 @@ unsigned char Assembler::generateModRMByte(const t_cmddata& cmd, const std::vect
 	return modrm;
 }
 
+bool startsWithXOR(const std::string& str) {
+	// 确保字符串长度至少为 3
+	if (str.length() < 3) {
+		return false;
+	}
+
+	// 提取前三个字符并转换为小写
+	std::string prefix = str.substr(0, 3);
+	for (char& c : prefix) {
+		c = std::tolower(c);
+	}
+
+	// 比较是否等于 "xor"
+	return prefix == "xor";
+}
+
 int main() {
 	// 设置调试开关
 	bool is_debug = true;  // 控制调试输出的开关
@@ -2143,53 +2190,29 @@ int main() {
 
 	// 测试用的汇编代码
 	std::string samstr = R"(
-MOV EDX,[EBP+8]
-MOV EDX,[EDX]
-XOR EAX,EAX
-TEST EDX,EDX
-JE SHORT 00000058
-PUSH ECX
-MOV CL,[EDX]
-PUSH EBX
-XOR BL,BL
-XOR EAX,EAX
-CMP CL,20
-JNZ SHORT 00000021
-MOV CL,[EDX+1]
-INC EDX
-CMP CL,20
-JE SHORT 00000018
-MOV CL,[EDX]
-CMP CL,2D
-JNZ SHORT 0000002C
-MOV BL,1
-JMP SHORT 00000031
-CMP CL,2B
-JNZ SHORT 00000032
-INC EDX
-MOV CL,[EDX]
-CMP CL,30
-JL SHORT 00000050
-CMP CL,39
-JG SHORT 00000050
-MOVSX ECX,CL
-LEA EAX,[EAX+EAX*4]
-INC EDX
-LEA EAX,[ECX+EAX*2-30]
-MOV CL,[EDX]
-CMP CL,30
-JGE SHORT 00000039
-TEST BL,BL
-POP EBX
-POP ECX
-JE SHORT 00000058
-NEG EAX
+MOV EAX,ECX
+TEST EAX,EAX
+JE SHORT 00000032
+LEA EDX,[EAX+3]
+MOV EBP,[EAX]
+ADD EAX,4
+LEA ECX,[EBP+FEFEFEFF]
+NOT EBP
+AND ECX,EBP
+AND ECX,80808080
+JE SHORT 00000009
+TEST ECX,8080
+JNZ SHORT 0000002E
+SHR ECX,10
+ADD EAX,2
+SHL CL,1
+SBB EAX,EDX
 POP EBP
-RETN 4
+RETN
 
 )";
 
-	std::string verifystr = "8B 55 08 8B 12 33 C0 85 D2 74 4D 51 8A 0A 53 32 DB 33 C0 80 F9 20 75 09 8A 4A 01 42 80 F9 20 74 F7 8A 0A 80 F9 2D 75 04 B3 01 EB 05 80 F9 2B 75 01 42 8A 0A 80 F9 30 7C 17 80 F9 39 7F 12 0F BE C9 8D 04 80 42 8D 44 41 D0 8A 0A 80 F9 30 7D E9 84 DB 5B 59 74 02 F7 D8 5D C2 04 00";
+	std::string verifystr = "89 C8 85 C0 74 2C 8D 50 03 8B 28 83 C0 04 8D 8D FF FE FE FE F7 D5 23 CD 81 E1 80 80 80 80 74 E9 F7 C1 80 80 00 00 75 06 C1 E9 10 83 C0 02 D0 E1 1B C2 5D C3";
 
 	// 预处理汇编代码（转换大写，清理空白等）
 	samstr = assembler.preprocessAsmCode(samstr);
@@ -2216,8 +2239,8 @@ RETN 4
 			std::cout << "[DEBUG] 当前指令偏移: 0x" << std::hex << totalLength << std::endl;
 		}
 
-		debug_pause_str = "";
-		debug_pause_num = 1410;
+		debug_pause_str = "TEST ECX,8080";
+		debug_pause_num = 1709;
 
 		// 解析指令并生成机器码()
 		auto instrBytes = assembler.AssembleInstruction(line, totalLength, 0);
@@ -2289,32 +2312,55 @@ RETN 4
 			}
 		}
 
-		if (isDifferent) 
+		if (isDifferent)
 		{
-			// 找出第一个不同的字节位置
-			size_t diffIndex = 0;
-			for (size_t i = 0; i < verifyBytes.size() && i < generatedBytes.size(); ++i) {
-				if (verifyBytes[i] != generatedBytes[i]) {
-					diffIndex = i;
-					break;
-				}
-			}
-
-			// 计算这个字节属于哪条汇编指令
 			size_t currentLength = 0;
 			size_t instructionIndex = 0;
-			for (size_t i = 0; i < LineResult.size(); ++i) {
-				if (currentLength + LineResult[i].hexlen > diffIndex) {
-					instructionIndex = i;
-					break;
+
+			// 找出第一个不同的字节位置
+			size_t diffIndex = 0;
+			bool foundDiff = false;
+
+			for (size_t i = 0; i < verifyBytes.size() && i < generatedBytes.size(); ++i) {
+				if (verifyBytes[i] != generatedBytes[i]) {
+					bool isXorDiff = false;
+					// 计算这个字节属于哪条汇编指令
+					size_t tempLength = 0;
+					for (size_t j = 0; j < LineResult.size(); ++j) {
+						if (tempLength + LineResult[j].hexlen > i) {
+							// 检查是否是XOR指令的31/33差异
+							if (startsWithXOR(LineResult[j].asmstr) &&
+								((verifyBytes[i] == "31" && generatedBytes[i] == "33") ||
+									(verifyBytes[i] == "33" && generatedBytes[i] == "31"))) {
+								isXorDiff = true;
+								break;
+							}
+							// 找到真正的差异
+							diffIndex = i;
+							instructionIndex = j;
+							foundDiff = true;
+							break;
+						}
+						tempLength += LineResult[j].hexlen;
+					}
+					if (isXorDiff) {
+						continue;  // 继续检查下一个字节
+					}
+					if (foundDiff) {
+						break;  // 找到真正的差异，退出循环
+					}
 				}
-				currentLength += LineResult[i].hexlen;
 			}
 
-			std::cout << "第" << diffIndex + 1 << "个机器码不同，需要检查！" << std::endl;
-			std::cout << "效验机器码：" << verifyBytes[diffIndex] << " (长度: " << verifyBytes[diffIndex].length() << ")" << std::endl;
-			std::cout << "生成机器码：" << generatedBytes[diffIndex] << " (长度: " << generatedBytes[diffIndex].length() << ")" << std::endl;
-			std::cout << "对应的汇编语句：" << LineResult[instructionIndex].asmstr << std::endl;
+			if (foundDiff) {
+				std::cout << "第" << diffIndex + 1 << "个机器码不同，需要检查！" << std::endl;
+				std::cout << "效验机器码：" << verifyBytes[diffIndex] << " (长度: " << verifyBytes[diffIndex].length() << ")" << std::endl;
+				std::cout << "生成机器码：" << generatedBytes[diffIndex] << " (长度: " << generatedBytes[diffIndex].length() << ")" << std::endl;
+				std::cout << "对应的汇编语句：" << LineResult[instructionIndex].asmstr << std::endl;
+			}
+			else {
+				std::cout << "生成的机器码和效验机器码实际上是相同的（忽略XOR指令的31/33差异）" << std::endl;
+			}
 		}
 		else
 		{
